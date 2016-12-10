@@ -1,0 +1,20 @@
+{
+  "raws": {
+    "after": ""
+  },
+  "type": "root",
+  "nodes": [],
+  "source": {
+    "input": {
+      "file": "empty.css"
+    },
+    "start": {
+      "line": 1,
+      "column": 1
+    },
+    "end" : {
+      "line" : 1,
+      "column" : 1
+    }
+  }
+}
