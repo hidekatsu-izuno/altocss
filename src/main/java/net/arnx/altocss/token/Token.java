@@ -1,13 +1,21 @@
 package net.arnx.altocss.token;
 
-public abstract class Token {
+import java.io.IOException;
+import java.io.UncheckedIOException;
+
+import net.arnx.altocss.util.JsonWriter;
+import net.arnx.altocss.util.Jsonable;
+
+public abstract class Token implements CharSequence, Jsonable {
+    private final String type;
 	private final String text;
 	private final int startLine;
 	private final int startColumn;
 	private final int endLine;
 	private final int endColumn;
 
-	public Token(String text, int startLine, int startColumn, int endLine, int endColumn) {
+	public Token(String type, String text, int startLine, int startColumn, int endLine, int endColumn) {
+	    this.type = type;
 	    this.text = text;
 		this.startLine = startLine;
 		this.startColumn = startColumn;
@@ -76,12 +84,48 @@ public abstract class Token {
 	}
 
 	@Override
+	public CharSequence subSequence(int start, int end) {
+	    return text.subSequence(start, end);
+	}
+
+	@Override
+	public char charAt(int index) {
+	    return text.charAt(index);
+	}
+
+	@Override
+	public int length() {
+	    return text.length();
+	}
+
+    @Override
+    public void jsonize(JsonWriter writer) throws IOException {
+        writer.beginObject();
+        {
+            writer.name("type").value(type);
+            writer.name("text").value(text());
+            writer.name("startLine").value(startLine());
+            writer.name("startColumn").value(startColumn());
+            writer.name("endLine").value(endLine());
+            writer.name("endColumn").value(endColumn());
+        }
+        writer.endObject();
+    }
+
+    public String toJSON() {
+        StringBuilder sb = new StringBuilder();
+        JsonWriter writer = new JsonWriter(sb);
+        writer.prettyPrint(true);
+        try {
+            jsonize(writer);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return sb.toString();
+    }
+
+	@Override
 	public String toString() {
-		return getClass().getSimpleName()
-				+ " [text=" + text
-				+ ", startLine=" + startLine
-				+ ", startColumn=" + startColumn
-				+ ", endLine=" + endLine
-				+ ", endColumn=" + endColumn + "]";
+		return text;
 	}
 }

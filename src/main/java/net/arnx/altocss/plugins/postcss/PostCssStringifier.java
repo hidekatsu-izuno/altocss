@@ -59,7 +59,7 @@ public class PostCssStringifier implements Stringifier {
 
 		if (decl.important()) {
 			String important = decl.raws().important();
-			context.append(orElse(important, " !important"));
+            context.append((important != null) ? important : " !important");
 		}
 
 		if (semicolon) {
@@ -81,7 +81,7 @@ public class PostCssStringifier implements Stringifier {
 		String afterName = atrule.raws().afterName();
 		if (afterName != null) {
 		    sb.append(afterName);
-		} else if (empty(params)) {
+		} else if (params == null || (params instanceof String && ((String)params).isEmpty())) {
 			sb.append(" ");
 		}
 		sb.append(params);
@@ -107,10 +107,10 @@ public class PostCssStringifier implements Stringifier {
 			last--;
 		}
 
-		boolean semicolon = toBoolean(raw(context, node, "semicolon", null));
+		boolean semicolon = Boolean.TRUE.equals(raw(context, node, "semicolon", "semicolon"));
 		for (int i = 0; i < node.size(); i++) {
 			Node child = node.get(i);
-			context.append(raw(context, child, "before", null));
+			context.append(raw(context, child, "before", "before"));
 			stringify(context, child, last != i || semicolon);
 		}
 	}
@@ -122,7 +122,7 @@ public class PostCssStringifier implements Stringifier {
 
 		if (node.hasBody()) {
 			body(context, node);
-			context.append(raw(context, node, "after", null));
+			context.append(raw(context, node, "after", "after"));
 		} else {
 			context.append(raw(context, node, "after", "emptyBody"));
 		}
@@ -132,10 +132,6 @@ public class PostCssStringifier implements Stringifier {
 	}
 
 	private Object raw(Context context, Node node, String own, String detect) {
-		if (detect == null) {
-			detect = own;
-		}
-
 		// Already had
 		if (own != null) {
 			Object value = node.raws().get(own);
@@ -155,7 +151,20 @@ public class PostCssStringifier implements Stringifier {
 
 		// Floating child without parent
 		if (parent == null) {
-			return defaultRaw(detect);
+		    switch (detect) {
+	        case "colon": return ": ";
+	        case "indent": return "    ";
+	        case "beforeDecl": return "\n";
+	        case "beforeRule": return "\n";
+	        case "beforeOpen": return " ";
+	        case "beforeClose": return "\n";
+	        case "beforeComment": return "\n";
+	        case "after": return "\n";
+	        case "emptyBody": return "";
+	        case "commentLeft": return " ";
+	        case "commentRight": return " ";
+	        default: return null;
+	        }
 		}
 
 		// Detect style by other nodes
@@ -341,41 +350,6 @@ public class PostCssStringifier implements Stringifier {
 			return node.raws().get(prop);
 		} else {
 			return value;
-		}
-	}
-
-	private String defaultRaw(String key) {
-		switch (key) {
-		case "colon": return ": ";
-		case "indent": return "    ";
-		case "beforeDecl": return "\n";
-		case "beforeRule": return "\n";
-		case "beforeOpen": return " ";
-		case "beforeClose": return "\n";
-		case "beforeComment": return "\n";
-		case "after": return "\n";
-		case "emptyBody": return "";
-		case "commentLeft": return " ";
-		case "commentRight": return " ";
-		default: return null;
-		}
-	}
-
-	private boolean empty(Object value) {
-		return value == null || (value instanceof CharSequence && ((CharSequence)value).length() == 0);
-	}
-
-	private String orElse(Object value, String defalutValue) {
-		return value != null ? value.toString() : defalutValue;
-	}
-
-	private boolean toBoolean(Object value) {
-		if (value == null) {
-			return false;
-		} else if (value instanceof Boolean) {
-			return (Boolean)value;
-		} else {
-			return value != null;
 		}
 	}
 
