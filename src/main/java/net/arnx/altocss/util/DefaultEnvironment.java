@@ -52,6 +52,11 @@ public class DefaultEnvironment implements Environment {
 	}
 
 	@Override
+	public void info(String message) {
+	    System.out.println("[INFO] " + message);
+	}
+
+	@Override
 	public void warn(String message) {
 	    System.err.println("[WARN] " + message);
 	}

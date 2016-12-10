@@ -1,4 +1,4 @@
-package net.arnx.altocss.tokens;
+package net.arnx.altocss.token;
 
 public class RBracketToken extends Token {
     public RBracketToken(String text, int line, int column) {

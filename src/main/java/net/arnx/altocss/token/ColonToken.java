@@ -1,4 +1,4 @@
-package net.arnx.altocss.tokens;
+package net.arnx.altocss.token;
 
 public class ColonToken extends Token {
     public ColonToken(String text, int line, int column) {

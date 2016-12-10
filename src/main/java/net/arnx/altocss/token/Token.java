@@ -1,4 +1,4 @@
-package net.arnx.altocss.tokens;
+package net.arnx.altocss.token;
 
 public abstract class Token {
 	private final String text;

@@ -1,16 +1,13 @@
 package net.arnx.altocss;
 
-import java.io.IOException;
-import java.util.Map;
-
-import net.arnx.altocss.nodes.RootNode;
+import net.arnx.altocss.node.RootNode;
 
 public interface Plugin {
-	public default void init(Environment env, Map<Option<?>, Object> options) {
+	public default void init(PluginContext context) {
 
 	}
 
-	public default Parser parser(String file) throws IOException {
+	public default Parser parser(String file) {
 		return null;
 	}
 
@@ -23,7 +20,7 @@ public interface Plugin {
 	public default void minify(RootNode root) {
 	}
 
-	public default Stringifier stringifier(String file) throws IOException {
+	public default Stringifier stringifier(String file) {
 		return null;
 	}
 }

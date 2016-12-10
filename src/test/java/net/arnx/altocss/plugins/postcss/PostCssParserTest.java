@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flipkart.zjsonpatch.JsonDiff;
 
-import net.arnx.altocss.nodes.RootNode;
+import net.arnx.altocss.node.RootNode;
 
 @RunWith(Theories.class)
 public class PostCssParserTest {

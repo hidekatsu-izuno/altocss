@@ -7,7 +7,7 @@ import java.io.UncheckedIOException;
 
 import org.junit.Test;
 
-import net.arnx.altocss.nodes.RootNode;
+import net.arnx.altocss.node.RootNode;
 import net.arnx.altocss.plugins.postcss.PostCssParser;
 import net.arnx.altocss.plugins.postcss.PostCssStringifier;
 import net.arnx.altocss.util.SourceMapBuilder;

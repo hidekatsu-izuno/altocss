@@ -11,20 +11,20 @@ import java.util.List;
 import org.junit.Test;
 
 import net.arnx.altocss.SyntaxException;
-import net.arnx.altocss.tokens.AtWordToken;
-import net.arnx.altocss.tokens.ColonToken;
-import net.arnx.altocss.tokens.CommentToken;
-import net.arnx.altocss.tokens.LBraceToken;
-import net.arnx.altocss.tokens.LBracketToken;
-import net.arnx.altocss.tokens.LParenToken;
-import net.arnx.altocss.tokens.RBraceToken;
-import net.arnx.altocss.tokens.RBracketToken;
-import net.arnx.altocss.tokens.RParenToken;
-import net.arnx.altocss.tokens.SemiColonToken;
-import net.arnx.altocss.tokens.SpaceToken;
-import net.arnx.altocss.tokens.StringToken;
-import net.arnx.altocss.tokens.Token;
-import net.arnx.altocss.tokens.WordToken;
+import net.arnx.altocss.token.AtWordToken;
+import net.arnx.altocss.token.ColonToken;
+import net.arnx.altocss.token.CommentToken;
+import net.arnx.altocss.token.LBraceToken;
+import net.arnx.altocss.token.LBracketToken;
+import net.arnx.altocss.token.LParenToken;
+import net.arnx.altocss.token.RBraceToken;
+import net.arnx.altocss.token.RBracketToken;
+import net.arnx.altocss.token.RParenToken;
+import net.arnx.altocss.token.SemiColonToken;
+import net.arnx.altocss.token.SpaceToken;
+import net.arnx.altocss.token.StringToken;
+import net.arnx.altocss.token.Token;
+import net.arnx.altocss.token.WordToken;
 
 public class PostCssTokenizerTest {
 

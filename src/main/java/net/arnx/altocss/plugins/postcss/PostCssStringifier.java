@@ -7,12 +7,12 @@ import java.util.Objects;
 
 import net.arnx.altocss.Input;
 import net.arnx.altocss.Stringifier;
-import net.arnx.altocss.nodes.AtRuleNode;
-import net.arnx.altocss.nodes.CommentNode;
-import net.arnx.altocss.nodes.DeclarationNode;
-import net.arnx.altocss.nodes.Node;
-import net.arnx.altocss.nodes.RootNode;
-import net.arnx.altocss.nodes.RuleNode;
+import net.arnx.altocss.node.AtRuleNode;
+import net.arnx.altocss.node.CommentNode;
+import net.arnx.altocss.node.DeclarationNode;
+import net.arnx.altocss.node.Node;
+import net.arnx.altocss.node.RootNode;
+import net.arnx.altocss.node.RuleNode;
 import net.arnx.altocss.util.SourceMapBuilder;
 
 public class PostCssStringifier implements Stringifier {

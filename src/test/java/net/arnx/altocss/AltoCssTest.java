@@ -67,6 +67,11 @@ public class AltoCssTest {
             }
 
             @Override
+            public void info(String message) {
+                throw new IllegalStateException(message);
+            }
+
+            @Override
             public void warn(String message) {
                 throw new IllegalStateException(message);
             }

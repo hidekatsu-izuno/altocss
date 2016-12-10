@@ -1,4 +1,4 @@
-package net.arnx.altocss.nodes;
+package net.arnx.altocss.node;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
