@@ -1,18 +1,19 @@
-package net.arnx.altocss;
+package net.arnx.altocss.nodes;
 
 import java.io.IOException;
 import java.util.Map;
 
+import net.arnx.altocss.Source;
 import net.arnx.altocss.util.JsonWriter;
 
-public class Rule extends Node {
-	public Rule() {
+public class RuleNode extends Node {
+	public RuleNode() {
 		super(true);
 	}
 
 	private String selector;
 
-	public Rule selector(String value) {
+	public RuleNode selector(String value) {
 		this.selector = value;
 		return this;
 	}
@@ -22,8 +23,8 @@ public class Rule extends Node {
 	}
 
 	@Override
-	public Rule source(Source source) {
-		return (Rule)super.source(source);
+	public RuleNode source(Source source) {
+		return (RuleNode)super.source(source);
 	}
 
 	@Override

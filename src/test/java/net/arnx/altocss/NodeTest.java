@@ -6,6 +6,12 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
+import net.arnx.altocss.nodes.AtRuleNode;
+import net.arnx.altocss.nodes.CommentNode;
+import net.arnx.altocss.nodes.DeclarationNode;
+import net.arnx.altocss.nodes.Node;
+import net.arnx.altocss.nodes.RootNode;
+import net.arnx.altocss.nodes.RuleNode;
 import net.arnx.altocss.plugins.postcss.PostCssParser;
 
 public class NodeTest {
@@ -27,24 +33,24 @@ public class NodeTest {
     @Test
     public void testWalkIterates() {
         PostCssParser parser = new PostCssParser();
-        Root root = parser.parse("example.css", EXAMPLE);
+        RootNode root = parser.parse("example.css", EXAMPLE);
 
         Iterator<Node> i = root.walker().iterator();
-        assertEquals(Rule.class, i.next().getClass());
-        assertEquals(Declaration.class, i.next().getClass());
-        assertEquals(Declaration.class, i.next().getClass());
-        assertEquals(Comment.class, i.next().getClass());
-        assertEquals(AtRule.class, i.next().getClass());
-        assertEquals(Comment.class, i.next().getClass());
-        assertEquals(Rule.class, i.next().getClass());
+        assertEquals(RuleNode.class, i.next().getClass());
+        assertEquals(DeclarationNode.class, i.next().getClass());
+        assertEquals(DeclarationNode.class, i.next().getClass());
+        assertEquals(CommentNode.class, i.next().getClass());
+        assertEquals(AtRuleNode.class, i.next().getClass());
+        assertEquals(CommentNode.class, i.next().getClass());
+        assertEquals(RuleNode.class, i.next().getClass());
         i.remove();
-        assertEquals(Declaration.class, i.next().getClass());
-        assertEquals(AtRule.class, i.next().getClass());
-        assertEquals(Rule.class, i.next().getClass());
-        assertEquals(Declaration.class, i.next().getClass());
-        assertEquals(AtRule.class, i.next().getClass());
-        assertEquals(Declaration.class, i.next().getClass());
-        assertEquals(Comment.class, i.next().getClass());
+        assertEquals(DeclarationNode.class, i.next().getClass());
+        assertEquals(AtRuleNode.class, i.next().getClass());
+        assertEquals(RuleNode.class, i.next().getClass());
+        assertEquals(DeclarationNode.class, i.next().getClass());
+        assertEquals(AtRuleNode.class, i.next().getClass());
+        assertEquals(DeclarationNode.class, i.next().getClass());
+        assertEquals(CommentNode.class, i.next().getClass());
     }
 
 }

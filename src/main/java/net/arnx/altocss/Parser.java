@@ -1,5 +1,7 @@
 package net.arnx.altocss;
 
+import net.arnx.altocss.nodes.RootNode;
+
 public interface Parser {
-	public Root parse(String file, String css);
+	public RootNode parse(String file, String css);
 }

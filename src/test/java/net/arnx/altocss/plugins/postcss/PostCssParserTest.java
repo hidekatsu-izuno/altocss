@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flipkart.zjsonpatch.JsonDiff;
 
-import net.arnx.altocss.Root;
+import net.arnx.altocss.nodes.RootNode;
 
 @RunWith(Theories.class)
 public class PostCssParserTest {
@@ -60,7 +60,7 @@ public class PostCssParserTest {
 
 		String file2 = "../../cases/" + testcase + ".css";
 		PostCssParser parser = new PostCssParser();
-		Root root = parser.parse(testcase + ".css", readFile(file2));
+		RootNode root = parser.parse(testcase + ".css", readFile(file2));
 		String json2text = root.toJSON();
 		JsonNode json2 =  mapper.readTree(json2text);
 

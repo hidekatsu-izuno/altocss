@@ -1,4 +1,4 @@
-package net.arnx.altocss;
+package net.arnx.altocss.nodes;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import net.arnx.altocss.Source;
 import net.arnx.altocss.util.JsonWriter;
 import net.arnx.altocss.util.Jsonable;
 import net.arnx.altocss.util.TreeWalker;
@@ -29,13 +30,13 @@ public abstract class Node extends AbstractList<Node> implements Jsonable {
 		return hasBody;
 	}
 
-	public Root root() {
+	public RootNode root() {
         Node current = this;
         while (current.parent != null) {
         	current = current.parent;
         }
-        if (current instanceof Root) {
-        	return (Root)current;
+        if (current instanceof RootNode) {
+        	return (RootNode)current;
         }
         return null;
     }

@@ -7,7 +7,7 @@ import java.io.UncheckedIOException;
 
 import org.junit.Test;
 
-import net.arnx.altocss.Root;
+import net.arnx.altocss.nodes.RootNode;
 import net.arnx.altocss.plugins.postcss.PostCssParser;
 import net.arnx.altocss.plugins.postcss.PostCssStringifier;
 import net.arnx.altocss.util.SourceMapBuilder;
@@ -29,7 +29,7 @@ public class PostCssStringifierTest {
 		PostCssParser parser = new PostCssParser();
 		SourceMapBuilder builder = new SourceMapBuilder();
 		try {
-			Root root = parser.parse("<empty>", css);
+			RootNode root = parser.parse("<empty>", css);
 			stringifier.stringify(root, sb, builder);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);

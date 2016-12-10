@@ -7,6 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.arnx.altocss.SyntaxException;
+import net.arnx.altocss.tokens.AtWordToken;
+import net.arnx.altocss.tokens.ColonToken;
+import net.arnx.altocss.tokens.CommentToken;
+import net.arnx.altocss.tokens.LBraceToken;
+import net.arnx.altocss.tokens.LBracketToken;
+import net.arnx.altocss.tokens.LParenToken;
+import net.arnx.altocss.tokens.RBraceToken;
+import net.arnx.altocss.tokens.RBracketToken;
+import net.arnx.altocss.tokens.RParenToken;
+import net.arnx.altocss.tokens.SemiColonToken;
+import net.arnx.altocss.tokens.SpaceToken;
+import net.arnx.altocss.tokens.StringToken;
+import net.arnx.altocss.tokens.Token;
+import net.arnx.altocss.tokens.WordToken;
 import net.arnx.altocss.util.InputSource;
 
 public class PostCssTokenizer {
@@ -40,7 +54,7 @@ public class PostCssTokenizer {
 		FLAGS['#'] = AT_END_FLAG | WORD_END_FLAG;
 	}
 
-	public List<PostCssToken> tokenize(String file, CharSequence cs) {
+	public List<Token> tokenize(String file, CharSequence cs) {
 		try (InputSource css = InputSource.from(cs)) {
 			return tokenize(file, css);
 		} catch (IOException e) {
@@ -48,14 +62,14 @@ public class PostCssTokenizer {
 		}
 	}
 
-	public List<PostCssToken> tokenize(String file, Reader reader) throws IOException {
+	public List<Token> tokenize(String file, Reader reader) throws IOException {
 		try (InputSource css = InputSource.from(reader)) {
 			return tokenize(file, css);
 		}
 	}
 
-	public List<PostCssToken> tokenize(String file, InputSource css) throws IOException {
-		List<PostCssToken> tokens = new ArrayList<>();
+	public List<Token> tokenize(String file, InputSource css) throws IOException {
+		List<Token> tokens = new ArrayList<>();
 
 		boolean inUrl = false;
 		int n;
@@ -94,7 +108,7 @@ public class PostCssTokenizer {
                     throw new SyntaxException(file, startLine, startColumn, "Unclosed bracket");
                 }
 
-                tokens.add(new PostCssToken(PostCssTokenType.WORD, css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+                tokens.add(new WordToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
                 continue;
 			}
 
@@ -112,35 +126,35 @@ public class PostCssTokenizer {
 					}
 				}
 
-				tokens.add(new PostCssToken(PostCssTokenType.SPACE, css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+				tokens.add(new SpaceToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				break;
 			}
 			case '[': {
-				tokens.add(new PostCssToken(PostCssTokenType.LBRACKET, css.text(), startLine, startColumn));
+				tokens.add(new LBracketToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case ']': {
-				tokens.add(new PostCssToken(PostCssTokenType.RBRACKET, css.text(), startLine, startColumn));
+				tokens.add(new RBracketToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case '{': {
-				tokens.add(new PostCssToken(PostCssTokenType.LBRACE, css.text(), startLine, startColumn));
+				tokens.add(new LBraceToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case '}': {
-				tokens.add(new PostCssToken(PostCssTokenType.RBRACE, css.text(), startLine, startColumn));
+				tokens.add(new RBraceToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case ':': {
-				tokens.add(new PostCssToken(PostCssTokenType.COLON, css.text(), startLine, startColumn));
+				tokens.add(new ColonToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case ';': {
-				tokens.add(new PostCssToken(PostCssTokenType.SEMICOLON, css.text(), startLine, startColumn));
+				tokens.add(new SemiColonToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case '(': {
-			    if (!tokens.isEmpty() && "url".equals(tokens.get(tokens.size() - 1).text)) {
+			    if (!tokens.isEmpty() && "url".equals(tokens.get(tokens.size() - 1).text())) {
 			        inUrl = true;
 			        if (css.lookup() == -1) {
 			            throw new SyntaxException(file, startLine, startColumn, "Unclosed bracket");
@@ -148,12 +162,12 @@ public class PostCssTokenizer {
 			            css.unlookup();
 			        }
 			    }
-                tokens.add(new PostCssToken(PostCssTokenType.LPAREN, css.text(), startLine, startColumn));
+                tokens.add(new LParenToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case ')': {
 			    inUrl = false;
-				tokens.add(new PostCssToken(PostCssTokenType.RPAREN, css.text(), startLine, startColumn));
+				tokens.add(new RParenToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case '\'':
@@ -173,7 +187,7 @@ public class PostCssTokenizer {
 					throw new SyntaxException(file, startLine, startColumn, "Unclosed string");
 				}
 
-				tokens.add(new PostCssToken(PostCssTokenType.STRING, css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+				tokens.add(new StringToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				break;
 			}
 			case '@': {
@@ -185,7 +199,7 @@ public class PostCssTokenizer {
 					}
 				}
 
-				tokens.add(new PostCssToken(PostCssTokenType.AT_WORD, css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+				tokens.add(new AtWordToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				break;
 			}
 			case '\\': {
@@ -201,7 +215,7 @@ public class PostCssTokenizer {
 						break;
 					}
 				}
-				tokens.add(new PostCssToken(PostCssTokenType.WORD, css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+				tokens.add(new WordToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				break;
 			}
 			default: {
@@ -225,7 +239,7 @@ public class PostCssTokenizer {
 						throw new SyntaxException(file, startLine, startColumn, "Unclosed comment");
 					}
 
-					tokens.add(new PostCssToken(PostCssTokenType.COMMENT, css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+					tokens.add(new CommentToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				} else {
 					while ((n = css.lookup()) != -1) {
 						if (n < FLAGS.length && (FLAGS[n] & WORD_END_FLAG) != 0) {
@@ -240,7 +254,7 @@ public class PostCssTokenizer {
 							css.next();
 						}
 					}
-					tokens.add(new PostCssToken(PostCssTokenType.WORD, css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+					tokens.add(new WordToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				}
 
 				break;

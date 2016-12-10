@@ -1,31 +1,45 @@
-package net.arnx.altocss.plugins.postcss;
+package net.arnx.altocss.tokens;
 
-public class PostCssToken {
-	public final PostCssTokenType type;
-	public final String text;
-	public final int startLine;
-	public final int startColumn;
-	public final int endLine;
-	public final int endColumn;
+public abstract class Token {
+	private final String text;
+	private final int startLine;
+	private final int startColumn;
+	private final int endLine;
+	private final int endColumn;
 
-	public PostCssToken(PostCssTokenType type, String text, int line, int column) {
-		this(type, text, line, column, line, column);
-	}
-
-	public PostCssToken(PostCssTokenType type, String text, int startLine, int startColumn, int endLine, int endColumn) {
-		this.type = type;
-		this.text = text;
+	public Token(String text, int startLine, int startColumn, int endLine, int endColumn) {
+	    this.text = text;
 		this.startLine = startLine;
 		this.startColumn = startColumn;
 		this.endLine = endLine;
 		this.endColumn = endColumn;
 	}
 
+	public String text() {
+	    return text;
+	}
+
+	public int startLine() {
+	    return startLine;
+	}
+
+	public int startColumn() {
+	    return startColumn;
+	}
+
+	public int endLine() {
+	    return endLine;
+	}
+
+	public int endColumn() {
+	    return endColumn;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + getClass().hashCode();
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		result = prime * result + startLine;
 		result = prime * result + startColumn;
@@ -42,11 +56,8 @@ public class PostCssToken {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PostCssToken other = (PostCssToken) obj;
-		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
+		Token other = (Token) obj;
+		if (getClass() != other.getClass())
 			return false;
 		if (text == null) {
 			if (other.text != null)
@@ -66,15 +77,11 @@ public class PostCssToken {
 
 	@Override
 	public String toString() {
-		return "Token [type=" + type
-				+ ", text=" + text
+		return getClass().getSimpleName()
+				+ " [text=" + text
 				+ ", startLine=" + startLine
 				+ ", startColumn=" + startColumn
 				+ ", endLine=" + endLine
-				+ ", endColumn=" + endColumn
-				+ "]";
+				+ ", endColumn=" + endColumn + "]";
 	}
-
-
-
 }

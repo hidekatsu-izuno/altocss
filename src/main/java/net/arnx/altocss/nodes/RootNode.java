@@ -1,18 +1,19 @@
-package net.arnx.altocss;
+package net.arnx.altocss.nodes;
 
 import java.io.IOException;
 import java.util.Map;
 
+import net.arnx.altocss.Source;
 import net.arnx.altocss.util.JsonWriter;
 
-public class Root extends Node {
-	public Root() {
+public class RootNode extends Node {
+	public RootNode() {
 		super(true);
 	}
 
 	@Override
-	public Root source(Source source) {
-		return (Root)super.source(source);
+	public RootNode source(Source source) {
+		return (RootNode)super.source(source);
 	}
 
 	@Override

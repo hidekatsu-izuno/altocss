@@ -1,18 +1,19 @@
-package net.arnx.altocss;
+package net.arnx.altocss.nodes;
 
 import java.io.IOException;
 import java.util.Map;
 
+import net.arnx.altocss.Source;
 import net.arnx.altocss.util.JsonWriter;
 
-public class Comment extends Node {
-	public Comment() {
+public class CommentNode extends Node {
+	public CommentNode() {
 		super(false);
 	}
 
 	private String text;
 
-	public Comment text(String text) {
+	public CommentNode text(String text) {
 		this.text = text;
 		return this;
 	}
@@ -22,8 +23,8 @@ public class Comment extends Node {
 	}
 
 	@Override
-	public Comment source(Source source) {
-		return (Comment)super.source(source);
+	public CommentNode source(Source source) {
+		return (CommentNode)super.source(source);
 	}
 
 	@Override

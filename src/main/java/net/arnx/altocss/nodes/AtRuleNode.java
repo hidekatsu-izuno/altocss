@@ -1,18 +1,19 @@
-package net.arnx.altocss;
+package net.arnx.altocss.nodes;
 
 import java.io.IOException;
 import java.util.Map;
 
+import net.arnx.altocss.Source;
 import net.arnx.altocss.util.JsonWriter;
 
-public class AtRule extends Node {
-	public AtRule(boolean hasBody) {
+public class AtRuleNode extends Node {
+	public AtRuleNode(boolean hasBody) {
 		super(hasBody);
 	}
 
 	private String name;
 
-	public AtRule name(String name) {
+	public AtRuleNode name(String name) {
 		this.name = name;
 		return this;
 	}
@@ -23,7 +24,7 @@ public class AtRule extends Node {
 
 	private String params;
 
-	public AtRule params(String params) {
+	public AtRuleNode params(String params) {
 		this.params = params;
 		return this;
 	}
@@ -33,8 +34,8 @@ public class AtRule extends Node {
 	}
 
 	@Override
-	public AtRule source(Source source) {
-		return (AtRule)super.source(source);
+	public AtRuleNode source(Source source) {
+		return (AtRuleNode)super.source(source);
 	}
 
 	@Override

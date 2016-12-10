@@ -1,18 +1,19 @@
-package net.arnx.altocss;
+package net.arnx.altocss.nodes;
 
 import java.io.IOException;
 import java.util.Map;
 
+import net.arnx.altocss.Source;
 import net.arnx.altocss.util.JsonWriter;
 
-public class Declaration extends Node {
-	public Declaration() {
+public class DeclarationNode extends Node {
+	public DeclarationNode() {
 		super(false);
 	}
 
 	private String prop;
 
-	public Declaration prop(String prop) {
+	public DeclarationNode prop(String prop) {
 		this.prop = prop;
 		return this;
 	}
@@ -23,7 +24,7 @@ public class Declaration extends Node {
 
 	private String value;
 
-	public Declaration value(String value) {
+	public DeclarationNode value(String value) {
 		this.value = value;
 		return this;
 	}
@@ -34,7 +35,7 @@ public class Declaration extends Node {
 
 	private boolean important;
 
-	public Declaration important(boolean important) {
+	public DeclarationNode important(boolean important) {
 		this.important = important;
 		return this;
 	}
@@ -44,8 +45,8 @@ public class Declaration extends Node {
 	}
 
 	@Override
-	public Declaration source(Source source) {
-		return (Declaration)super.source(source);
+	public DeclarationNode source(Source source) {
+		return (DeclarationNode)super.source(source);
 	}
 
 	@Override

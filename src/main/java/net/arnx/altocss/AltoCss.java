@@ -21,6 +21,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.arnx.altocss.nodes.RootNode;
 import net.arnx.altocss.plugins.postcss.PostCssParser;
 import net.arnx.altocss.plugins.postcss.PostCssStringifier;
 import net.arnx.altocss.util.DefaultEnvironment;
@@ -156,7 +157,7 @@ public class AltoCss {
 			content = new String(buf, 0, pos, charset);
 		}
 
-		Root root = parser.parse(infile, content);
+		RootNode root = parser.parse(infile, content);
 
 		for (Plugin plugin : plugins) {
 			plugin.process(root);

@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import net.arnx.altocss.AtRule;
-import net.arnx.altocss.Comment;
-import net.arnx.altocss.Declaration;
 import net.arnx.altocss.Input;
-import net.arnx.altocss.Node;
-import net.arnx.altocss.Root;
-import net.arnx.altocss.Rule;
 import net.arnx.altocss.Stringifier;
+import net.arnx.altocss.nodes.AtRuleNode;
+import net.arnx.altocss.nodes.CommentNode;
+import net.arnx.altocss.nodes.DeclarationNode;
+import net.arnx.altocss.nodes.Node;
+import net.arnx.altocss.nodes.RootNode;
+import net.arnx.altocss.nodes.RuleNode;
 import net.arnx.altocss.util.SourceMapBuilder;
 
 public class PostCssStringifier implements Stringifier {
@@ -26,34 +26,34 @@ public class PostCssStringifier implements Stringifier {
 	private void stringify(Context context, Node node, boolean semicolon) throws IOException {
 		context.addSource(node.source().input());
 
-		if (node instanceof Root) {
-			root(context, (Root)node);
-		} else if (node instanceof Comment) {
-			comment(context, (Comment)node);
-		} else if (node instanceof Declaration) {
-			decl(context, (Declaration)node, semicolon);
-		} else if (node instanceof Rule) {
-			rule(context, (Rule)node);
-		} else if (node instanceof AtRule) {
-			atrule(context, (AtRule)node, semicolon);
+		if (node instanceof RootNode) {
+			root(context, (RootNode)node);
+		} else if (node instanceof CommentNode) {
+			comment(context, (CommentNode)node);
+		} else if (node instanceof DeclarationNode) {
+			decl(context, (DeclarationNode)node, semicolon);
+		} else if (node instanceof RuleNode) {
+			rule(context, (RuleNode)node);
+		} else if (node instanceof AtRuleNode) {
+			atrule(context, (AtRuleNode)node, semicolon);
 		} else {
 			throw new IllegalArgumentException("unknown node type: " + node.getClass());
 		}
 	}
 
-	protected void root(Context context, Root root) throws IOException {
+	protected void root(Context context, RootNode root) throws IOException {
 		body(context, root);
 		context.append(root.raws().after());
 	}
 
-	protected void comment(Context context, Comment comment) throws IOException {
+	protected void comment(Context context, CommentNode comment) throws IOException {
 		Object left = raw(context, comment, "left", "commentLeft");
 		Object right = raw(context, comment, "right", "commentRight");
 		context.append("/*").append(left).append(comment.text()).append(right).append("*/");
 		context.addMapping(comment, null);
 	}
 
-	protected void decl(Context context, Declaration decl, boolean semicolon)  throws IOException {
+	protected void decl(Context context, DeclarationNode decl, boolean semicolon)  throws IOException {
 		Object between = raw(context, decl, "between", "colon");
 		context.append(decl.prop()).append(between).append(rawValue(decl, "value", decl.value()));
 
@@ -69,11 +69,11 @@ public class PostCssStringifier implements Stringifier {
 		context.addMapping(decl, null);
 	}
 
-	protected void rule(Context context, Rule rule)  throws IOException {
+	protected void rule(Context context, RuleNode rule)  throws IOException {
 		block(context, rule, rawValue(rule, "selector", rule.selector()));
 	}
 
-	protected void atrule(Context context, AtRule atrule, boolean semicolon)  throws IOException {
+	protected void atrule(Context context, AtRuleNode atrule, boolean semicolon)  throws IOException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("@").append(atrule.name());
 		Object params = atrule.params() != null ? rawValue(atrule, "params", atrule.params()) : null;
@@ -101,7 +101,7 @@ public class PostCssStringifier implements Stringifier {
 	private void body(Context context, Node node) throws IOException {
 		int last = node.size() - 1;
 		while (last > 0) {
-			if (!(node.get(last) instanceof Comment)) {
+			if (!(node.get(last) instanceof CommentNode)) {
 				break;
 			}
 			last--;
@@ -148,7 +148,7 @@ public class PostCssStringifier implements Stringifier {
 
 		// Hack for first rule in CSS
 		if (Objects.equals(detect, "before")) {
-			if (parent == null || (parent instanceof Root && !parent.isEmpty() && parent.get(0) == node)) {
+			if (parent == null || (parent instanceof RootNode && !parent.isEmpty() && parent.get(0) == node)) {
 				return "";
 			}
 		}
@@ -167,12 +167,12 @@ public class PostCssStringifier implements Stringifier {
 			return beforeAfter(context, node, detect);
 		}
 
-		Root root = node.root();
+		RootNode root = node.root();
 		Object value = null;
 		switch (detect) {
 		case "semicolon": {
 		    for (Node current : root.walker()) {
-		        if (!current.isEmpty() && current.get(current.size() -1) instanceof Declaration) {
+		        if (!current.isEmpty() && current.get(current.size() -1) instanceof DeclarationNode) {
 		            value = current.raws().semicolon();
 		            break;
 	            }
@@ -191,7 +191,7 @@ public class PostCssStringifier implements Stringifier {
 		case "indent": {
 		    for (Node current : root.walker()) {
 				Node p = current.parent();
-				if (p != null && !(p instanceof Root) && p.parent() != null && p.parent() == root) {
+				if (p != null && !(p instanceof RootNode) && p.parent() != null && p.parent() == root) {
 					String before = current.raws().before();
 					if (before != null) {
 						String[] parts = before.split("\n");
@@ -204,7 +204,7 @@ public class PostCssStringifier implements Stringifier {
 		}
 		case "beforeComment": {
 		    for (Node current : root.walker()) {
-				if (current instanceof Comment) {
+				if (current instanceof CommentNode) {
 					String before = current.raws().before();
 					if (before != null) {
 						if (before.indexOf('\n') != -1) {
@@ -222,7 +222,7 @@ public class PostCssStringifier implements Stringifier {
 		}
 		case "beforeDecl": {
 		    for (Node current : root.walker()) {
-				if (current instanceof Declaration) {
+				if (current instanceof DeclarationNode) {
 					String before = current.raws().before();
 					if (before != null) {
 						if (before.indexOf('\n') != -1) {
@@ -270,8 +270,8 @@ public class PostCssStringifier implements Stringifier {
 		}
 		case "beforeOpen": {
 		    for (Node current : root.walker()) {
-				if (current instanceof Declaration) {
-					value = ((Declaration)current).raws().between();
+				if (current instanceof DeclarationNode) {
+					value = ((DeclarationNode)current).raws().between();
 					break;
 				}
 			}
@@ -279,8 +279,8 @@ public class PostCssStringifier implements Stringifier {
 		}
 		case "colon": {
 		    for (Node current : root.walker()) {
-				if (current instanceof Declaration) {
-					String between = ((Declaration)current).raws().between();
+				if (current instanceof DeclarationNode) {
+					String between = ((DeclarationNode)current).raws().between();
 					if (between != null) {
 						value = between.replaceAll("[^\\s:]", "");
 						break;
@@ -304,9 +304,9 @@ public class PostCssStringifier implements Stringifier {
 
 	private Object beforeAfter(Context context, Node node, String detect) {
 		Object value;
-		if (node instanceof Declaration) {
+		if (node instanceof DeclarationNode) {
 			value = raw(context, node, null, "beforeDecl");
-		} else if (node instanceof Comment) {
+		} else if (node instanceof CommentNode) {
 			value = raw(context, node, null, "beforeComment");
 		} else if (Objects.equals(detect, "before")) {
 			value = raw(context, node, null, "beforeRule");
@@ -316,7 +316,7 @@ public class PostCssStringifier implements Stringifier {
 
 		Node buf = node.parent();
 		int depth = 0;
-		while (buf != null && !(buf instanceof Root)) {
+		while (buf != null && !(buf instanceof RootNode)) {
 			depth++;
 			buf = buf.parent();
 		}
