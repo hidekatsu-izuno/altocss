@@ -7,21 +7,21 @@ import net.arnx.altocss.util.JsonWriter;
 import net.arnx.altocss.util.Jsonable;
 
 public abstract class Token implements CharSequence, Jsonable {
-    private final String type;
 	private final String text;
 	private final int startLine;
 	private final int startColumn;
 	private final int endLine;
 	private final int endColumn;
 
-	public Token(String type, String text, int startLine, int startColumn, int endLine, int endColumn) {
-	    this.type = type;
+	public Token(String text, int startLine, int startColumn, int endLine, int endColumn) {
 	    this.text = text;
 		this.startLine = startLine;
 		this.startColumn = startColumn;
 		this.endLine = endLine;
 		this.endColumn = endColumn;
 	}
+
+	protected abstract String type();
 
 	public String text() {
 	    return text;
@@ -102,7 +102,7 @@ public abstract class Token implements CharSequence, Jsonable {
     public void jsonize(JsonWriter writer) throws IOException {
         writer.beginObject();
         {
-            writer.name("type").value(type);
+            writer.name("type").value(type());
             writer.name("text").value(text());
             writer.name("startLine").value(startLine());
             writer.name("startColumn").value(startColumn());

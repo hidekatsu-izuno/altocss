@@ -2,6 +2,11 @@ package net.arnx.altocss.token;
 
 public class WordToken extends Token {
     public WordToken(String text, int startLine, int startColumn, int endLine, int endColumn) {
-        super("word", text, startLine, startColumn, endLine, endColumn);
+        super(text, startLine, startColumn, endLine, endColumn);
+    }
+
+    @Override
+    protected String type() {
+        return "word";
     }
 }
