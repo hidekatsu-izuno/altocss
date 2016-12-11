@@ -217,6 +217,9 @@ public class JsonWriter {
 			}
 			endObject();
 			return this;
+		} else if (value instanceof Jsonable) {
+		    ((Jsonable)value).jsonize(this);
+		    return this;
 		}
 
 		State state = stack.peek();

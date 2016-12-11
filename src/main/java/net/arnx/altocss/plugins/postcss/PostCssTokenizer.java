@@ -56,14 +56,14 @@ public class PostCssTokenizer {
         FLAGS['#'] = AT_END_FLAG | WORD_END_FLAG;
         FLAGS['+'] = OPE_FLAG;
         FLAGS['-'] = OPE_FLAG;
-        FLAGS['~'] = OPE_FLAG;
-        FLAGS['^'] = OPE_FLAG;
-        FLAGS['$'] = OPE_FLAG;
-        FLAGS['*'] = OPE_FLAG;
-        FLAGS['|'] = OPE_FLAG;
-        FLAGS['='] = OPE_FLAG;
-        FLAGS['<'] = OPE_FLAG;
-        FLAGS['>'] = OPE_FLAG;
+        FLAGS['~'] = WORD_END_FLAG | OPE_FLAG;
+        FLAGS['^'] = WORD_END_FLAG | OPE_FLAG;
+        FLAGS['$'] = WORD_END_FLAG | OPE_FLAG;
+        FLAGS['*'] = WORD_END_FLAG | OPE_FLAG;
+        FLAGS['|'] = WORD_END_FLAG | OPE_FLAG;
+        FLAGS['='] = WORD_END_FLAG | OPE_FLAG;
+        FLAGS['<'] = WORD_END_FLAG | OPE_FLAG;
+        FLAGS['>'] = WORD_END_FLAG | OPE_FLAG;
 	}
 
 	public List<Token> tokenize(String file, CharSequence cs) {
@@ -252,8 +252,7 @@ public class PostCssTokenizer {
 
 					tokens.add(new CommentToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				} else if (code < FLAGS.length && (FLAGS[code] & OPE_FLAG) != 0
-				        && !(code == '+' || code == '-' || code == '!')
-				        && (n == -1 || (n < FLAGS.length && (FLAGS[n] & OPE_FLAG) != 0))) {
+				        && (!(code == '+' || code == '-' || code == '!') || (n == -1 || (n < FLAGS.length && (FLAGS[n] & (OPE_FLAG | WORD_END_FLAG)) != 0)))) {
 				    css.unlookup();
 				    while ((n = css.lookup()) != -1) {
                         if (n < FLAGS.length && (FLAGS[n] & OPE_FLAG) != 0) {

@@ -17,6 +17,7 @@ import net.arnx.altocss.token.CommentToken;
 import net.arnx.altocss.token.LBraceToken;
 import net.arnx.altocss.token.LBracketToken;
 import net.arnx.altocss.token.LParenToken;
+import net.arnx.altocss.token.OpeToken;
 import net.arnx.altocss.token.RBraceToken;
 import net.arnx.altocss.token.RBracketToken;
 import net.arnx.altocss.token.RParenToken;
@@ -246,6 +247,29 @@ public class PostCssTokenizerTest {
 		tokens.add(new WordToken("b", 2, 4, 2, 4));
 		assertEquals(tokens, tokenizer.tokenize("", toSource("a/* \n */b")));
 	}
+
+    @Test
+    public void supportsOpe() throws IOException {
+        PostCssTokenizer tokenizer = new PostCssTokenizer();
+        List<Token> tokens = new ArrayList<>();
+        tokens.add(new WordToken("calc", 1, 1, 1, 4));
+        tokens.add(new LParenToken("(", 1, 5));
+        tokens.add(new WordToken("1px+2em-3%", 1, 6, 1, 15));
+        tokens.add(new OpeToken("*", 1, 16, 1, 16));
+        tokens.add(new WordToken("4mm", 1, 17, 1, 19));
+        tokens.add(new OpeToken("/", 1, 20, 1, 20));
+        tokens.add(new WordToken("5cm", 1, 21, 1, 23));
+        tokens.add(new SpaceToken(" ", 1, 24, 1, 24));
+        tokens.add(new OpeToken("+", 1, 25, 1, 25));
+        tokens.add(new SpaceToken(" ", 1, 26, 1, 26));
+        tokens.add(new WordToken("6pt", 1, 27, 1, 29));
+        tokens.add(new SpaceToken(" ", 1, 30, 1, 30));
+        tokens.add(new OpeToken("-", 1, 31, 1, 31));
+        tokens.add(new SpaceToken(" ", 1, 32, 1, 32));
+        tokens.add(new WordToken("7vw", 1, 33, 1, 35));
+        tokens.add(new RParenToken(")", 1, 36));
+        assertEquals(tokens, tokenizer.tokenize("", toSource("calc(1px+2em-3%*4mm/5cm + 6pt - 7vw)")));
+    }
 
 	@Test
 	public void supportsLineFeed() throws IOException {
