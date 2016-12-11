@@ -1,7 +1,7 @@
 package net.arnx.altocss.token;
 
-public class SemiColonToken extends Token {
-    public SemiColonToken(String text, int line, int column) {
+public class SemicolonToken extends Token {
+    public SemicolonToken(String text, int line, int column) {
         super(text, line, column, line, column);
     }
 

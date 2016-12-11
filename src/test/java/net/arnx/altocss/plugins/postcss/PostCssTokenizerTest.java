@@ -21,7 +21,7 @@ import net.arnx.altocss.token.OpeToken;
 import net.arnx.altocss.token.RBraceToken;
 import net.arnx.altocss.token.RBracketToken;
 import net.arnx.altocss.token.RParenToken;
-import net.arnx.altocss.token.SemiColonToken;
+import net.arnx.altocss.token.SemicolonToken;
 import net.arnx.altocss.token.SpaceToken;
 import net.arnx.altocss.token.StringToken;
 import net.arnx.altocss.token.Token;
@@ -77,7 +77,7 @@ public class PostCssTokenizerTest {
 		List<Token> tokens = new ArrayList<>();
 		tokens.add(new LBraceToken("{", 1, 1));
 		tokens.add(new ColonToken(":", 1, 2));
-		tokens.add(new SemiColonToken(";", 1, 3));
+		tokens.add(new SemicolonToken(";", 1, 3));
 		tokens.add(new RBraceToken("}", 1, 4));
 		assertEquals(tokens, tokenizer.tokenize("", toSource("{:;}")));
 	}
@@ -196,7 +196,7 @@ public class PostCssTokenizerTest {
 		tokens.add(new AtWordToken("@three", 1, 12, 1, 17));
 		tokens.add(new StringToken("\"\"", 1, 18, 1, 19));
 		tokens.add(new AtWordToken("@four", 1, 20, 1, 24));
-		tokens.add(new SemiColonToken(";", 1, 25));
+		tokens.add(new SemicolonToken(";", 1, 25));
 		assertEquals(tokens, tokenizer.tokenize("", toSource("@one{@two()@three\"\"@four;")));
 	}
 
@@ -305,7 +305,7 @@ public class PostCssTokenizerTest {
 		tokens.add(new ColonToken(":", 2, 10));
 		tokens.add(new SpaceToken(" ", 2, 11, 2, 11));
 		tokens.add(new StringToken("\"a\"", 2, 12, 2, 14));
-		tokens.add(new SemiColonToken(";", 2, 15));
+		tokens.add(new SemicolonToken(";", 2, 15));
 		tokens.add(new SpaceToken("\n  ", 2, 16, 3, 2));
 		tokens.add(new WordToken("width", 3, 3, 3, 7));
 		tokens.add(new ColonToken(":", 3, 8));
@@ -313,7 +313,7 @@ public class PostCssTokenizerTest {
 		tokens.add(new WordToken("calc", 3, 10, 3, 13));
         tokens.add(new LParenToken("(", 3, 14));
         tokens.add(new WordToken("1px", 3, 15, 3, 17));
-        tokens.add(new SemiColonToken(";", 3, 18));
+        tokens.add(new SemicolonToken(";", 3, 18));
         tokens.add(new RParenToken(")", 3, 19));
 		tokens.add(new SpaceToken("\n  ", 3, 20, 4, 2));
 		tokens.add(new RBraceToken("}", 4, 3));

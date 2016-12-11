@@ -25,7 +25,7 @@ import net.arnx.altocss.token.OpeToken;
 import net.arnx.altocss.token.RBraceToken;
 import net.arnx.altocss.token.RBracketToken;
 import net.arnx.altocss.token.RParenToken;
-import net.arnx.altocss.token.SemiColonToken;
+import net.arnx.altocss.token.SemicolonToken;
 import net.arnx.altocss.token.SpaceToken;
 import net.arnx.altocss.token.Token;
 import net.arnx.altocss.token.WordToken;
@@ -46,7 +46,7 @@ public class PostCssParser implements Parser {
 			context.current = root;
 			while (context.pos < context.tokens.size()) {
 				Token token = context.tokens.get(context.pos);
-				if (token instanceof SpaceToken || token instanceof SemiColonToken) {
+				if (token instanceof SpaceToken || token instanceof SemicolonToken) {
                     context.spaces.append(token.text());
 				} else if (token instanceof CommentToken) {
 				    comment(context, token);
@@ -133,7 +133,7 @@ public class PostCssParser implements Parser {
 				}
 				brackets.add(token instanceof LParenToken ? RParenToken.class : RBracketToken.class);
 			} else if (brackets.isEmpty()) {
-				if (token instanceof SemiColonToken) {
+				if (token instanceof SemicolonToken) {
 					if (colon) {
 						decl(context, new SliceList<>(context.tokens, start, context.pos + 1));
 						return;
@@ -200,7 +200,7 @@ public class PostCssParser implements Parser {
 		init(context, node, -1, -1);
 
 		Token last = tokens.get(tokens.size() - 1);
-		if (last instanceof SemiColonToken) {
+		if (last instanceof SemicolonToken) {
 			context.semicolon = true;
 			tokens.pop();
 		}
@@ -313,7 +313,7 @@ public class PostCssParser implements Parser {
 		int pos = context.pos + 1;
 		while (pos < context.tokens.size()) {
 			Token ptoken = context.tokens.get(pos);
-			if (ptoken instanceof SemiColonToken || ptoken instanceof RBraceToken) {
+			if (ptoken instanceof SemicolonToken || ptoken instanceof RBraceToken) {
 				lastToken = ptoken;
 				break;
 			} else if (ptoken instanceof LBraceToken) {
@@ -338,7 +338,7 @@ public class PostCssParser implements Parser {
 		boolean last = false;
 		if (lastToken == null) {
 			last = true;
-		} else if (lastToken instanceof SemiColonToken) {
+		} else if (lastToken instanceof SemicolonToken) {
 			node.source().end(new Position(lastToken.startLine(), lastToken.startColumn()));
 			context.semicolon = true;
 		} else if (lastToken instanceof RBraceToken) {

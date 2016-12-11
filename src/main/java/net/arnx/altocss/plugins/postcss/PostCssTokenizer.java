@@ -17,7 +17,7 @@ import net.arnx.altocss.token.OpeToken;
 import net.arnx.altocss.token.RBraceToken;
 import net.arnx.altocss.token.RBracketToken;
 import net.arnx.altocss.token.RParenToken;
-import net.arnx.altocss.token.SemiColonToken;
+import net.arnx.altocss.token.SemicolonToken;
 import net.arnx.altocss.token.SpaceToken;
 import net.arnx.altocss.token.StringToken;
 import net.arnx.altocss.token.Token;
@@ -162,7 +162,7 @@ public class PostCssTokenizer {
 				break;
 			}
 			case ';': {
-				tokens.add(new SemiColonToken(css.text(), startLine, startColumn));
+				tokens.add(new SemicolonToken(css.text(), startLine, startColumn));
 				break;
 			}
 			case '(': {
