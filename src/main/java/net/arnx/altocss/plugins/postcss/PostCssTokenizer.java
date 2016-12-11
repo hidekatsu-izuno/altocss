@@ -251,8 +251,9 @@ public class PostCssTokenizer {
 					}
 
 					tokens.add(new CommentToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
-				} else if (code < FLAGS.length && (FLAGS[code] & OPE_FLAG) != 0
-				        && (!(code == '+' || code == '-' || code == '!') || (n == -1 || (n < FLAGS.length && (FLAGS[n] & (OPE_FLAG | WORD_END_FLAG)) != 0)))) {
+				} else if ((code != '+' && code != '-' && code != '!' && (code < FLAGS.length && (FLAGS[code] & OPE_FLAG) != 0))
+				        || ((code == '+' || code == '-') && (n == -1 || (n < FLAGS.length && (FLAGS[n] & (OPE_FLAG | WORD_END_FLAG)) != 0))
+				        || (code == '!' && n != -1 && (n < FLAGS.length && (FLAGS[n] & OPE_FLAG) != 0)))) {
 				    css.unlookup();
 				    while ((n = css.lookup()) != -1) {
                         if (n < FLAGS.length && (FLAGS[n] & OPE_FLAG) != 0) {

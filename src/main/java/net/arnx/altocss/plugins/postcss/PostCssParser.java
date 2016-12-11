@@ -21,6 +21,7 @@ import net.arnx.altocss.token.CommentToken;
 import net.arnx.altocss.token.LBraceToken;
 import net.arnx.altocss.token.LBracketToken;
 import net.arnx.altocss.token.LParenToken;
+import net.arnx.altocss.token.OpeToken;
 import net.arnx.altocss.token.RBraceToken;
 import net.arnx.altocss.token.RBracketToken;
 import net.arnx.altocss.token.RParenToken;
@@ -212,7 +213,7 @@ public class PostCssParser implements Parser {
 		}
 		while (!tokens.isEmpty()) {
 			Token token = tokens.get(0);
-			if (token instanceof WordToken) {
+			if (token instanceof WordToken || token instanceof OpeToken) {
 				break;
 			}
 			sb.append(tokens.shift().text());
