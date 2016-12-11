@@ -13,6 +13,7 @@ import net.arnx.altocss.token.CommentToken;
 import net.arnx.altocss.token.LBraceToken;
 import net.arnx.altocss.token.LBracketToken;
 import net.arnx.altocss.token.LParenToken;
+import net.arnx.altocss.token.OpeToken;
 import net.arnx.altocss.token.RBraceToken;
 import net.arnx.altocss.token.RBracketToken;
 import net.arnx.altocss.token.RParenToken;
@@ -28,7 +29,8 @@ public class PostCssTokenizer {
 	private static final int SPACE_FLAG = 0B00000001;
 	private static final int AT_END_FLAG = 0B00000010;
 	private static final int WORD_END_FLAG = 0B00000100;
-	private static final int NO_URL_FLAG = 0B00001000;
+    private static final int NO_URL_FLAG = 0B00001000;
+    private static final int OPE_FLAG = 0B00010000;
 	private static final int[] FLAGS = new int[128];
 
 	static {
@@ -42,16 +44,26 @@ public class PostCssTokenizer {
 		FLAGS[':'] = WORD_END_FLAG;
 		FLAGS[';'] = AT_END_FLAG | WORD_END_FLAG;
 		FLAGS['@'] = WORD_END_FLAG;
-		FLAGS['!'] = WORD_END_FLAG;
+		FLAGS['!'] = WORD_END_FLAG | OPE_FLAG;
 		FLAGS['('] = AT_END_FLAG | WORD_END_FLAG | NO_URL_FLAG;
 		FLAGS[')'] = AT_END_FLAG | WORD_END_FLAG | NO_URL_FLAG;
 		FLAGS['\''] = AT_END_FLAG | WORD_END_FLAG | NO_URL_FLAG;
 		FLAGS['"'] = AT_END_FLAG | WORD_END_FLAG | NO_URL_FLAG;
 		FLAGS['\\'] = AT_END_FLAG | WORD_END_FLAG;
-		FLAGS['/'] = AT_END_FLAG;
+		FLAGS['/'] = AT_END_FLAG | WORD_END_FLAG | OPE_FLAG;
 		FLAGS['['] = AT_END_FLAG | WORD_END_FLAG;
 		FLAGS[']'] = AT_END_FLAG | WORD_END_FLAG;
-		FLAGS['#'] = AT_END_FLAG | WORD_END_FLAG;
+        FLAGS['#'] = AT_END_FLAG | WORD_END_FLAG;
+        FLAGS['+'] = OPE_FLAG;
+        FLAGS['-'] = OPE_FLAG;
+        FLAGS['~'] = OPE_FLAG;
+        FLAGS['^'] = OPE_FLAG;
+        FLAGS['$'] = OPE_FLAG;
+        FLAGS['*'] = OPE_FLAG;
+        FLAGS['|'] = OPE_FLAG;
+        FLAGS['='] = OPE_FLAG;
+        FLAGS['<'] = OPE_FLAG;
+        FLAGS['>'] = OPE_FLAG;
 	}
 
 	public List<Token> tokenize(String file, CharSequence cs) {
@@ -219,20 +231,19 @@ public class PostCssTokenizer {
 				break;
 			}
 			default: {
-				if (code == '/' && css.lookup() == '*') {
+			    n = css.lookup();
+			    if (code == '/' && n == '*') {
 					css.next();
 
-					while ((n = css.lookup()) != -1) {
+					boolean star = false;
+					while ((n = css.next()) != -1) {
 						if (n == '*') {
-							if ((n = css.lookup()) == '/') {
-								css.next();
-								css.next();
-								break;
-							} else {
-								css.next();
-							}
+							star = true;
+						} else if (star && n == '/') {
+						    break;
+						} else {
+						    star = false;
 						}
-						css.next();
 					}
 
 					if (n == -1) {
@@ -240,21 +251,28 @@ public class PostCssTokenizer {
 					}
 
 					tokens.add(new CommentToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+				} else if (code < FLAGS.length && (FLAGS[code] & OPE_FLAG) != 0
+				        && !(code == '+' || code == '-' || code == '!')
+				        && (n == -1 || (n < FLAGS.length && (FLAGS[n] & OPE_FLAG) != 0))) {
+				    css.unlookup();
+				    while ((n = css.lookup()) != -1) {
+                        if (n < FLAGS.length && (FLAGS[n] & OPE_FLAG) != 0) {
+                            css.next();
+                        } else {
+                            break;
+                        }
+                    }
+                    tokens.add(new OpeToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				} else {
-					while ((n = css.lookup()) != -1) {
-						if (n < FLAGS.length && (FLAGS[n] & WORD_END_FLAG) != 0) {
-							break;
-						} else if (n == '/') {
-							if ((n = css.lookup()) == '*') {
-								break;
-							} else {
-								css.next();
-							}
-						} else {
-							css.next();
-						}
-					}
-					tokens.add(new WordToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
+				    css.unlookup();
+				    while ((n = css.lookup()) != -1) {
+	                    if (n < FLAGS.length && (FLAGS[n] & WORD_END_FLAG) != 0) {
+	                        break;
+	                    } else {
+	                        css.next();
+	                    }
+	                }
+	                tokens.add(new WordToken(css.text(), startLine, startColumn, css.getLine(), css.getColumn()));
 				}
 
 				break;

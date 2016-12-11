@@ -4,30 +4,32 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TokenList extends AbstractList<CharSequence> implements CharSequence {
-    private List<CharSequence> list = new ArrayList<>();
+import net.arnx.altocss.token.Token;
+
+public class TokenList extends AbstractList<Token> implements CharSequence {
+    private List<Token> list = new ArrayList<>();
     private String text;
 
     @Override
-    public void add(int index, CharSequence cs) {
+    public void add(int index, Token token) {
         text = null;
-        list.add(index, cs);
+        list.add(index, token);
     }
 
     @Override
-    public CharSequence set(int index, CharSequence cs) {
+    public Token set(int index, Token token) {
         text = null;
-        return list.set(index, cs);
+        return list.set(index, token);
     }
 
     @Override
-    public CharSequence remove(int index) {
+    public Token remove(int index) {
         text = null;
         return list.remove(index);
     }
 
     @Override
-    public CharSequence get(int index) {
+    public Token get(int index) {
         return list.get(index);
     }
 
