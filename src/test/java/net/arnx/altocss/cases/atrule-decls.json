@@ -1,6 +1,5 @@
 {
   "raws": {
-    "semicolon": false,
     "after": ""
   },
   "type": "root",
@@ -10,7 +9,6 @@
         "before": "",
         "between": " ",
         "afterName": " ",
-        "semicolon": false,
         "after": "\n"
       },
       "type": "atrule",
@@ -59,7 +57,6 @@
         "before": "\n\n",
         "between": " ",
         "afterName": "",
-        "semicolon": false,
         "after": "\n"
       },
       "type": "atrule",
@@ -108,7 +105,7 @@
         "before": "\n\n",
         "between": " ",
         "afterName": "",
-        "semicolon": true,
+        "semicolon": ";",
         "after": "\n"
       },
       "type": "atrule",
@@ -157,7 +154,7 @@
         "before": "\n\n",
         "between": " ",
         "afterName": "",
-        "semicolon": true,
+        "semicolon": ";",
         "after": "\n"
       },
       "type": "atrule",
@@ -206,7 +203,7 @@
         "before": "\n\n",
         "between": " ",
         "afterName": "",
-        "semicolon": true,
+        "semicolon": ";",
         "after": "\n"
       },
       "type": "atrule",

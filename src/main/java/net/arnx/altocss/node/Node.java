@@ -130,14 +130,14 @@ public abstract class Node extends AbstractList<Node> implements Jsonable {
 			return null;
 		}
 
-		public void semicolon(Boolean semicolon) {
+		public void semicolon(String semicolon) {
 			put("semicolon", semicolon);
 		}
 
-		public Boolean semicolon() {
+		public String semicolon() {
 			Object semicolon = get("semicolon");
-			if (semicolon instanceof Boolean) {
-				return (Boolean)semicolon;
+			if (semicolon instanceof String) {
+				return (String)semicolon;
 			}
 			return null;
 		}

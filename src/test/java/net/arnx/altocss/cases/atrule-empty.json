@@ -1,6 +1,6 @@
 {
   "raws": {
-    "semicolon": true,
+    "semicolon": ";",
     "after": ""
   },
   "type": "root",

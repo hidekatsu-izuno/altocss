@@ -1,6 +1,5 @@
 {
   "raws": {
-    "semicolon": false,
     "after": ""
   },
   "type": "root",
@@ -10,7 +9,6 @@
         "before": "",
         "between": " ",
         "afterName": " ",
-        "semicolon": false,
         "after": "\n"
       },
       "type": "atrule",
@@ -35,7 +33,6 @@
             "before": "\n    ",
             "between": " ",
             "afterName": " ",
-            "semicolon": false,
             "after": "\n    "
           },
           "type": "atrule",
@@ -59,7 +56,7 @@
               "raws": {
                 "before": "\n        ",
                 "between": " ",
-                "semicolon": true,
+                "semicolon": ";",
                 "after": "\n        "
               },
               "type": "rule",
@@ -106,7 +103,6 @@
               "raws": {
                 "before": "\n        ",
                 "between": " ",
-                "semicolon": false,
                 "after": "\n        "
               },
               "type": "rule",

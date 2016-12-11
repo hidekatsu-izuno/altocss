@@ -201,7 +201,7 @@ public class PostCssParser implements Parser {
 
 		Token last = tokens.get(tokens.size() - 1);
 		if (last instanceof SemicolonToken) {
-			context.semicolon = true;
+			context.semicolon = (SemicolonToken)last;
 			tokens.pop();
 		}
 		node.source().end(new Position(last.endLine(), last.endColumn()));
@@ -339,8 +339,8 @@ public class PostCssParser implements Parser {
 		if (lastToken == null) {
 			last = true;
 		} else if (lastToken instanceof SemicolonToken) {
+            context.semicolon = (SemicolonToken)lastToken;
 			node.source().end(new Position(lastToken.startLine(), lastToken.startColumn()));
-			context.semicolon = true;
 		} else if (lastToken instanceof RBraceToken) {
 		    Token lastPrevToken = context.tokens.get(pos - 1);
 		    node.source().end(new Position(lastPrevToken.endLine(), lastPrevToken.endColumn()));
@@ -375,10 +375,10 @@ public class PostCssParser implements Parser {
 	}
 
 	protected void end(Context context, Token token) {
-		if (!context.current.isEmpty()) {
-			context.current.raws().semicolon(context.semicolon);
+		if (!context.current.isEmpty() && context.semicolon != null) {
+			context.current.raws().semicolon(context.semicolon.toString());
 		}
-		context.semicolon = false;
+		context.semicolon = null;
 
 		StringBuilder sb = context.getCachedBuilder();
 		String after = context.current.raws().after();
@@ -402,8 +402,8 @@ public class PostCssParser implements Parser {
 			unclosedBlock(context);
 		}
 
-		if (!context.current.isEmpty()) {
-			context.current.raws().semicolon(context.semicolon);
+		if (!context.current.isEmpty() && context.semicolon != null) {
+			context.current.raws().semicolon(context.semicolon.toString());
 		}
 
 		StringBuilder sb = context.getCachedBuilder();
@@ -433,7 +433,7 @@ public class PostCssParser implements Parser {
 		node.raws().before(context.spaces.toString());
 		context.spaces.setLength(0);
 		if (!(node instanceof CommentNode)) {
-			context.semicolon = false;
+			context.semicolon = null;
 		}
 	}
 
@@ -591,7 +591,7 @@ public class PostCssParser implements Parser {
 		List<Token> tokens;
 		int pos = 0;
 		private Node current;
-		boolean semicolon;
+		SemicolonToken semicolon;
 
 		private Context(String file, String css) {
 			this.input = new Input(file, css);

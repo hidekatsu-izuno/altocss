@@ -1,6 +1,5 @@
 {
   "raws": {
-    "semicolon": false,
     "after": ""
   },
   "type": "root",
@@ -9,7 +8,7 @@
       "raws": {
         "before": "",
         "between": " ",
-        "semicolon": true,
+        "semicolon": ";",
         "after": " "
       },
       "type": "rule",

@@ -107,11 +107,11 @@ public class PostCssStringifier implements Stringifier {
 			last--;
 		}
 
-		boolean semicolon = Boolean.TRUE.equals(raw(context, node, "semicolon", "semicolon"));
+		Object semicolon = raw(context, node, "semicolon", "semicolon");
 		for (int i = 0; i < node.size(); i++) {
 			Node child = node.get(i);
 			context.append(raw(context, child, "before", "before"));
-			stringify(context, child, last != i || semicolon);
+			stringify(context, child, last != i || semicolon != null);
 		}
 	}
 
