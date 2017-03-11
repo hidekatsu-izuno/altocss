@@ -1,8 +1,6 @@
 package net.arnx.altocss.plugins.postcss;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import net.arnx.altocss.Input;
@@ -167,148 +165,11 @@ public class PostCssStringifier implements Stringifier {
 	        }
 		}
 
-		// Detect style by other nodes
-		if (context.rawCache.containsKey(detect)) {
-			return context.rawCache.get(detect);
-		}
+        if (Objects.equals(detect, "before") || Objects.equals(detect, "after")) {
+            return beforeAfter(context, node, detect);
+        }
 
-		if (Objects.equals(detect, "before") || Objects.equals(detect, "after")) {
-			return beforeAfter(context, node, detect);
-		}
-
-		RootNode root = node.root();
-		Object value = null;
-		switch (detect) {
-		case "semicolon": {
-		    for (Node current : root.walker()) {
-		        if (!current.isEmpty() && current.get(current.size() -1) instanceof DeclarationNode) {
-		            value = current.raws().semicolon();
-		            break;
-	            }
-		    }
-			break;
-		}
-		case "emptyBody": {
-		    for (Node current : root.walker()) {
-				if (!current.isEmpty()) {
-				    value = current.raws().after();
-				    break;
-				}
-			}
-			break;
-		}
-		case "indent": {
-		    for (Node current : root.walker()) {
-				Node p = current.parent();
-				if (p != null && !(p instanceof RootNode) && p.parent() != null && p.parent() == root) {
-					String before = current.raws().before();
-					if (before != null) {
-						String[] parts = before.split("\n");
-						value = parts[parts.length - 1].replaceAll("[^\\s]", "");
-						break;
-					}
-				}
-			}
-			break;
-		}
-		case "beforeComment": {
-		    for (Node current : root.walker()) {
-				if (current instanceof CommentNode) {
-					String before = current.raws().before();
-					if (before != null) {
-						if (before.indexOf('\n') != -1) {
-							before = before.replaceFirst("[^\\n]+$", "");
-						}
-						value = before;
-						break;
-					}
-				}
-			}
-			if (value == null) {
-				value = raw(context, node, null, "beforeDecl");
-			}
-			break;
-		}
-		case "beforeDecl": {
-		    for (Node current : root.walker()) {
-				if (current instanceof DeclarationNode) {
-					String before = current.raws().before();
-					if (before != null) {
-						if (before.indexOf('\n') != -1) {
-							before = before.replaceAll("[^\\n]+", "");
-						}
-						value = before;
-						break;
-					}
-				}
-			}
-			if (value == null) {
-				value = raw(context, node, null, "beforeRule");
-			}
-			break;
-		}
-		case "beforeRule": {
-		    for (Node current : root.walker()) {
-				if (current.hasBody() && (current.parent() != root || root.isEmpty() || root.get(0) != current)) {
-					String before = current.raws().before();
-					if (before != null) {
-						if (before.indexOf('\n') != -1) {
-							before = before.replaceFirst("[^\\n]+$", "");
-						}
-						value = before;
-						break;
-					}
-				}
-			}
-			break;
-		}
-		case "beforeClose": {
-		    for (Node current : root.walker()) {
-				if (!current.isEmpty()) {
-					String after = current.raws().after();
-					if (after != null) {
-						if (after.indexOf('\n') != -1) {
-							after = after.replaceFirst("[^\n]+$", "");
-						}
-						value = after;
-						break;
-					}
-				}
-			}
-			break;
-		}
-		case "beforeOpen": {
-		    for (Node current : root.walker()) {
-				if (current instanceof DeclarationNode) {
-					value = ((DeclarationNode)current).raws().between();
-					break;
-				}
-			}
-			break;
-		}
-		case "colon": {
-		    for (Node current : root.walker()) {
-				if (current instanceof DeclarationNode) {
-					String between = ((DeclarationNode)current).raws().between();
-					if (between != null) {
-						value = between.replaceAll("[^\\s:]", "");
-						break;
-					}
-				}
-			}
-			break;
-		}
-		default: {
-		    for (Node current : root.walker()) {
-				value = current.raws().get(own);
-				break;
-			}
-			break;
-		}
-		}
-
-		context.rawCache.put(detect, value);
-		return value;
+		return null;
 	}
 
 	private Object beforeAfter(Context context, Node node, String detect) {
@@ -363,8 +224,6 @@ public class PostCssStringifier implements Stringifier {
 		private int line = 1;
 		private int column = 0;
 		private int breakstate = 0; // 0 CR 1 LF/FF/CR 2
-
-		Map<String, Object> rawCache = new HashMap<>();
 
 		public Context(Appendable out, SourceMapBuilder builder) {
 			this.out = out;
