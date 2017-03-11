@@ -190,7 +190,7 @@ public class PostCssParser implements Parser {
 		Token token = tokens.get(0);
 		init(context, node, token.startLine(), token.startColumn());
 
-		node.raws().between(spacesFromEnd(context.getCachedBuilder(), tokens).toString());
+		node.raws().between(spacesAndCommentsFromEnd(context.getCachedBuilder(), tokens).toString());
 		node.selector(raw(context, node, "selector", tokens));
 		context.current = node;
 	}
@@ -262,7 +262,7 @@ public class PostCssParser implements Parser {
 		if (between != null) {
 			sb.append(between);
 		}
-		spacesFromStart(sb, tokens);
+		spacesAndCommentsFromStart(sb, tokens);
 		node.raws().between(sb.toString());
 		precheckMissedSemicolon(context, tokens);
 
@@ -349,9 +349,9 @@ public class PostCssParser implements Parser {
 
 		SliceList<Token> tokens = new SliceList<>(params, 0, params.size());
 
-		node.raws().between(spacesFromEnd(context.getCachedBuilder(), tokens).toString());
+		node.raws().between(spacesAndCommentsFromEnd(context.getCachedBuilder(), tokens).toString());
 		if (!tokens.isEmpty()) {
-			node.raws().afterName(spacesFromStart(context.getCachedBuilder(), tokens).toString());
+			node.raws().afterName(spacesAndCommentsFromStart(context.getCachedBuilder(), tokens).toString());
 			node.params(raw(context, node, "params", tokens));
 			if (last) {
 				token = tokens.get(tokens.size() - 1);
@@ -462,7 +462,7 @@ public class PostCssParser implements Parser {
 		return value;
 	}
 
-	private StringBuilder spacesFromStart(StringBuilder sb, SliceList<Token> tokens) {
+	private StringBuilder spacesAndCommentsFromStart(StringBuilder sb, SliceList<Token> tokens) {
 		int to = tokens.size();
 		for (int i = 0; i < tokens.size(); i++) {
 			Token token = tokens.get(i);
@@ -477,7 +477,7 @@ public class PostCssParser implements Parser {
 		return sb;
 	}
 
-	private StringBuilder spacesFromEnd(StringBuilder sb, SliceList<Token> tokens) {
+	private StringBuilder spacesAndCommentsFromEnd(StringBuilder sb, SliceList<Token> tokens) {
 		int from = 0;
 		for (int i = tokens.size() - 1; i >= 0; i--) {
 			Token token = tokens.get(i);
@@ -494,6 +494,25 @@ public class PostCssParser implements Parser {
 			tokens.pop();
 		}
 		return sb;
+	}
+
+	private StringBuilder spacesFromEnd(StringBuilder sb, SliceList<Token> tokens) {
+	    int from = 0;
+	    for (int i = tokens.size() - 1; i >= 0; i--) {
+            Token token = tokens.get(i);
+            if (!(token instanceof SpaceToken)) {
+                from = i + 1;
+                break;
+            }
+        }
+        int count = tokens.size() - from;
+        for (int i = 0; i < count; i++) {
+            sb.append(tokens.get(from + i).text());
+        }
+        for (int i = 0; i < count; i++) {
+            tokens.pop();
+        }
+        return sb;
 	}
 
 	private String stringFrom(StringBuilder sb, SliceList<Token> tokens, int from) {
